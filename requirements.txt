@@ -1,0 +1,14 @@
+torch
+torchvision
+numpy
+pandas
+tqdm
+scipy
+scikit-learn
+itertools
+transformers
+huggingface_hub
+peft
+diffusers
+networkx
+shortuuid
