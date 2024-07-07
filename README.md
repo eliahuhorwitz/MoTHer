@@ -102,11 +102,11 @@ for llama2 run the `test_llama()` test and for Stable Diffusion run the `test_SD
 If you find this useful for your research, please use the following.
 
 ```
-@misc{2405.18432,
-Author = {Eliahu Horwitz and Asaf Shul and Yedid Hoshen},
-Title = {On the Origin of Llamas: Model Tree Heritage Recovery},
-Year = {2024},
-Eprint = {arXiv:2405.18432},
+@article{horwitz2024origin,
+  title={On the Origin of Llamas: Model Tree Heritage Recovery},
+  author={Horwitz, Eliahu and Shul, Asaf and Hoshen, Yedid},
+  journal={arXiv preprint arXiv:2405.18432},
+  year={2024}
 }
 ```
 
