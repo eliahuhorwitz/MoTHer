@@ -1,7 +1,7 @@
-# Model Tree Heritage Recovery
-Official PyTorch Implementation for the "Model Tree Heritage Recovery" paper.  
+# Unsupervised Model Tree Heritage Recovery
+Official PyTorch Implementation for the "Unsupervised Model Tree Heritage Recovery" paper (ICLR 2025).  
 <p align="center">
-    🌐 <a href="https://vision.huji.ac.il/mother/" target="_blank">Project</a> | 📃 <a href="https://arxiv.org/abs/TODO" target="_blank">Paper</a><br>
+    🌐 <a href="https://horwitz.ai/mother" target="_blank">Project</a> | 📃 <a href="https://arxiv.org/abs/2405.18432" target="_blank">Paper</a>| 🤗 <a href="https://huggingface.co/MoTHer-VTHR" target="_blank">Dataset</a> <br>
 </p>
 
 ![](imgs/header.gif)
@@ -11,26 +11,29 @@ In these structures, heredity relations are represented as directed edges.
 We introduce the task of *Model Tree Heritage Recovery* (MoTHer Recovery), its goal is to uncover the 
 unknown structure of Model Graphs based on the weights of a set of input models.
 ___
-
-> **Model Tree Heritage Recovery**<br>
+![](imgs/poster.png) 
+> **Unsupervised Model Tree Heritage Recovery**<br>
 > Eliahu Horwitz, Asaf Shul, Yedid Hoshen<br>
 > <a href="https://arxiv.org/abs/2405.18432" target="_blank">https://arxiv.org/abs/2405.18432 <br>
 >
->**Abstract:** The rapid growth of neural network models shared on the internet has made model weights
-> an important data modality. However, this information is underutilized as the weights are uninterpretable, 
-> and publicly available models are disorganized. Inspired by Darwin's tree of life, we define the *Model Tree* 
-> which describes the origin of models i.e., the parent model that was used to fine-tune the target model. 
-> Similarly to the natural world, the tree structure is unknown. In this paper, we introduce the task of 
-> *Model Tree Heritage Recovery* (MoTHer Recovery) for discovering Model Trees in the ever-growing universe of 
-> neural networks. Our hypothesis is that model weights encode this information, the challenge is to decode the 
-> underlying tree structure given the weights. Beyond the immediate application of model authorship attribution, 
-> MoTHer recovery holds exciting long-term applications akin to indexing the internet by search engines. 
-> Practically, for each pair of models, this task requires: i) determining if they are related, and ii) establishing the 
-> direction of the relationship. We find that certain distributional properties of the weights evolve monotonically during training, 
-> which enables us to classify the relationship between two given models. MoTHer recovery reconstructs entire model hierarchies, 
-> represented by a directed tree, where a parent model gives rise to multiple child models through additional training. 
-> Our approach successfully reconstructs complex Model Trees, as well as the structure of "in-the-wild" model 
-> families such as Llama 2 and Stable Diffusion.
+>**Abstract:** The number of models shared online has recently skyrocketed, with over one 
+> million public models available on Hugging Face. Sharing models allows other users to build 
+> on existing models, using them as initialization for fine-tuning, improving accuracy, and 
+> saving compute and energy. However, it also raises important intellectual property issues, 
+> as fine-tuning may violate the license terms of the original model or that of its training data. 
+> A Model Tree, i.e., a tree data structure rooted at a foundation model and having directed 
+> edges between a parent model and other models directly fine-tuned from it (children), would 
+> settle such disputes by making the model heritage explicit. Unfortunately, current models are 
+> not well documented, with most model metadata (e.g., "model cards") not providing accurate 
+> information about heritage. In this paper, we introduce the task of 
+> *Unsupervised Model Tree Heritage Recovery* (Unsupervised MoTHer Recovery) for collections 
+> of neural networks. For each pair of models, this task requires: i) determining if they are 
+> directly related, and ii) establishing the direction of the relationship. Our hypothesis is 
+> that model weights encode this information, the challenge is to decode the underlying tree 
+> structure given the weights. We discover several properties of model weights that allow us to 
+> perform this task. By using these properties, we formulate the MoTHer Recovery task as 
+> finding a directed minimal spanning tree. In extensive experiments we demonstrate that our 
+> method successfully reconstructs complex Model Trees.
 
 ## Installation 
 1.  Clone the repo:
@@ -66,18 +69,13 @@ We will later discuss how to perform this clustering.
 ### Running on Model Graphs with known model clusters
 
 #### Running on the FT Split
-As a first step we need to gather the weight statistics, this is done by running the following command:
-```bash
-python get_vit_layer_statistics.py
-```
-
-Once the statistics are gathered, we can run the MoTHer Recovery on the FT split:
+Run the MoTHer Recovery on the FT split:
 ```bash
 python MoTHer_FullFT.py
 ```
 
 #### Running on the LoRA Splits
-For the LoRA-V and LoRA-F splits, there is no need to gather the weight statistics, we can directly run the MoTHer Recovery:
+Run the MoTHer Recovery on the LoRA-V and LoRA-F splits:
 ```bash
 python MoTHer_LoRA.py
 ```
@@ -93,20 +91,18 @@ python clustering.py
 ```
 
 
-## Running MoTHer on in-the-wild Models
-For Running MoTHer on Llama2 or Stable Diffusion you can run the tests in the `test_llama_and_sd.py` file.
-for llama2 run the `test_llama()` test and for Stable Diffusion run the `test_SD()` test.
-
 
 ## Citation
 If you find this useful for your research, please use the following.
 
 ```
-@article{horwitz2024origin,
-  title={On the Origin of Llamas: Model Tree Heritage Recovery},
-  author={Horwitz, Eliahu and Shul, Asaf and Hoshen, Yedid},
-  journal={arXiv preprint arXiv:2405.18432},
-  year={2024}
+@inproceedings{
+horwitz2025unsupervised,
+title={Unsupervised Model Tree Heritage Recovery},
+author={Eliahu Horwitz and Asaf Shul and Yedid Hoshen},
+booktitle={The Thirteenth International Conference on Learning Representations},
+year={2025},
+url={https://openreview.net/forum?id=QVj3kUvdvl}
 }
 ```
 

@@ -16,34 +16,9 @@ def calc_ku(model, layer_kind=None):
     return model_ku
 
 
-def _get_layer_kinds(vit: bool = False, llama: bool = False):
+def _get_layer_kinds():
     """ get layer kinds for a model """
-    assert sum([vit, llama]) == 1, 'Exactly one of the flags should be set to True'
-    if vit:
-        return ['attention.query', 'attention.key', 'attention.value', 'output.dense']
-
-    if llama:
-        return ['self_attn.q_proj', 'self_attn.k_proj', 'self_attn.v_proj', 'self_attn.o_proj',
-                'mlp.gate_proj', 'mlp.up_proj', 'mlp.down_proj', 'input_layernorm', 'post_attention_layernorm']
+    return ['attention.query', 'attention.key', 'attention.value', 'output.dense']
 
 
-def _get_nodes(llama: bool = False, sd: bool = False):
-    """ get nodes for a model """
-    assert sum([llama, sd]) == 1, 'Exactly one of the flags should be set to True'
-    if llama:
-        return [
-            ('0-X-X', 'meta-llama/Llama-2-7b-hf'),
-            ('0-0-X', 'meta-llama/CodeLlama-7b-hf'),
-            ('0-0-0', 'meta-llama/CodeLlama-7b-Instruct-hf'),
-            ('0-1-X', 'meta-llama/CodeLlama-7b-Python-hf'),
-            ('0-2-X', 'meta-llama/Llama-2-7b-chat-hf'),
-        ]
 
-    if sd:
-        return [
-            ('0-X-X', 'CompVis/stable-diffusion-v1-1'),
-            ('0-0-X', 'CompVis/stable-diffusion-v1-2'),
-            ('0-0-0', 'CompVis/stable-diffusion-v1-3'),
-            ('0-0-1', 'CompVis/stable-diffusion-v1-4'),
-            ('0-0-2', 'runwayml/stable-diffusion-v1-5'),
-        ]

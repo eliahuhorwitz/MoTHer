@@ -47,11 +47,8 @@ def build_tree(ku_, dist_, lam_: float, ground_truth_: set, rev: bool = False):
     return res, acc_
 
 
-def get_ground_truth(r_i: int = None, llama=False, sd=False):
+def get_ground_truth(r_i: int = None):
     """ Returns the ground truth for the given root index. """
-    assert sum([r_i is not None, llama, sd]) == 1, \
-        'Only one of r_i, llama, or sd should be provided.'
-
     if r_i is not None:
         return {f'{r_i}-X-X -> {r_i}-3-X', f'{r_i}-X-X -> {r_i}-2-X',
                 f'{r_i}-X-X -> {r_i}-1-X', f'{r_i}-X-X -> {r_i}-0-X',
@@ -63,19 +60,3 @@ def get_ground_truth(r_i: int = None, llama=False, sd=False):
                 f'{r_i}-1-X -> {r_i}-1-1', f'{r_i}-1-X -> {r_i}-1-0',
                 f'{r_i}-0-X -> {r_i}-0-3', f'{r_i}-0-X -> {r_i}-0-2',
                 f'{r_i}-0-X -> {r_i}-0-0', f'{r_i}-0-X -> {r_i}-0-1'}
-
-    elif llama:
-        return {
-            f'0-X-X -> 0-2-X',
-            f'0-X-X -> 0-1-X',
-            f'0-X-X -> 0-0-X',
-            f'0-0-X -> 0-0-0'
-        }
-
-    elif sd:
-        return {
-            '0-X-X -> 0-0-X',
-            '0-0-X -> 0-0-0',
-            '0-0-X -> 0-0-1',
-            '0-0-1 -> 0-0-2'
-        }

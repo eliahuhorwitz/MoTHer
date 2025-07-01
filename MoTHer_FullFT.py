@@ -17,8 +17,7 @@ warnings.filterwarnings("ignore")
 
 def calc_dist_and_ku(model_graph_, root_idx_, layer_kind='output.dense'):
     """ Calculates the distance and kurtosis between the models. """
-    layer_kinds_ = _get_layer_kinds(vit=True)
-    vit_statistics = pd.read_csv(os.path.join(f'vit_[{root_idx_}]_layers_statistics.csv'))
+    layer_kinds_ = _get_layer_kinds()
     idx = []
     root_ = model_graph_.get_roots()[root_idx_]
     root_str = f'{root_idx_}-X-X'
@@ -46,21 +45,13 @@ def calc_dist_and_ku(model_graph_, root_idx_, layer_kind='output.dense'):
                 layer_data_j = models[node_j].state_dict()[f'encoder.layer.{block_idx}.attention.{kind}.weight']
 
                 diff = layer_data_i - layer_data_j
-
-                # minmax normalize diff:
-                min_ = vit_statistics.loc[(vit_statistics['block_idx'] == block_idx) &
-                                          (vit_statistics['layer_kind'] == kind), 'min'].values[0]
-                max_ = vit_statistics.loc[(vit_statistics['block_idx'] == block_idx) &
-                                          (vit_statistics['layer_kind'] == kind), 'max'].values[0]
-                diff_minmax = (diff - min_) / (max_ - min_)
+                l2_diff = diff.pow(2).mean().sqrt().item()
 
                 if len(diff.shape) == 2 and diff.shape[0] == diff.shape[1]:
-                    dist_[block_idx][kind][node_i][node_j] = dist_[block_idx][kind][node_j][node_i] = \
-                        diff_minmax.max().item()
+                    dist_[block_idx][kind][node_i][node_j] = dist_[block_idx][kind][node_j][node_i] = l2_diff
 
-    max_dist_ = pd.DataFrame(np.max(np.array([d.values for i in dist_ for d in dist_[i].values()
-                                    if not np.isnan(d.values).all()]), axis=0), index=idx, columns=idx).fillna(0)
-    return ku_, max_dist_
+    mean_dist_ = pd.DataFrame(np.mean(np.array([d.values for i in dist_ for d in dist_[i].values() if not np.isnan(d.values).all()]), axis=0), index=idx, columns=idx).fillna(0)
+    return ku_, mean_dist_
 
 
 if __name__ == '__main__':
@@ -68,8 +59,8 @@ if __name__ == '__main__':
         model_graph = pickle.load(f)
         roots = model_graph.get_roots()
         for root_idx in range(len(roots)):
-            calc_dist_and_ku(model_graph, root_idx)
             ku, dist = calc_dist_and_ku(model_graph, root_idx)
-            _, acc = build_tree(ku, dist, 0.3, get_ground_truth(root_idx))
+            tree, acc = build_tree(ku, dist, 0.3, get_ground_truth(root_idx))
+            print(f'[{root_idx}]: tree: {tree}')
             print(f'[{root_idx}]: accuracy: {acc:.2f}%')
             print('-' * 100)
